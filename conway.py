@@ -5,17 +5,9 @@ class GameBoard: # This class represents the GameBoard itself, and primarily con
         self.size = size
         self.board = [[0 for i in range(size)] for i in range(size)]
 
-    def __init__(self, size, board): # This constructor takes an argument for both size and a pre-existing board 2D array
-        self.size = size
-        self.board = board
-
-    def __init__(self): # The default constructor; will always initialize with size 10
-        self.size = 10
-        self.board = [[0 for i in range(self.size)] for i in range(self.size)]
-
     def initialize(self): # This method instantiates the game board with a randomly chosen population of cells
-        for row in range(0, self.board.length):
-            for column in range(0, self.board[row].length):
+        for row in range(0, self.size):
+            for column in range(0, self.size):
                 if random.randint(0, 1) == 1:
                     self.board[row][column] = 'D'
                 else:
@@ -26,9 +18,9 @@ class GameBoard: # This class represents the GameBoard itself, and primarily con
         columnIndex = column - 1 # Subtract one from each so that they can be used as array indices
         liveNeighborCount = 0
 
-        for i in range(rowIndex, rowIndex + 1):
-            for j in range(columnIndex, columnIndex + 1):
-                if (i >= self.board.length or j >= self.board[row].length or i < 0 or j < 0 or (i == rowIndex and j == columnIndex)):
+        for i in range(rowIndex - 1, rowIndex + 1):
+            for j in range(columnIndex - 1, columnIndex + 1):
+                if (i >+ self.size or j >= self.size or i < 0 or j < 0 or (i == rowIndex and j == columnIndex)):
                     # Ensure we don't go out of array bounds or count the cell as its own neighbor
                     continue
                 elif self.board[i][j] == 'A':
@@ -62,5 +54,17 @@ class GameBoard: # This class represents the GameBoard itself, and primarily con
     
     def getSize(self):
         return self.size
+    
+    def __repr__(self):
+        returnStr = ''
+
+        for i in range(0, self.size):
+            returnStr += str(self.board[i]) + '\n'
+        return returnStr
+    
+myBoard = GameBoard(10)
+myBoard.initialize()
+print(str(myBoard) + '\n')
+print(str(myBoard.countLiveNeighbors(10, 10)))
 
 
