@@ -28,7 +28,8 @@ class GameBoard: # This class represents the GameBoard itself, and primarily con
         return liveNeighborCount
     
     def doGameTick(self):
-        tempBoard = GameBoard(self.size, self.board) # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
+        tempBoard = GameBoard(self.size) 
+        tempBoard.board = self.board # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
         for row in range(1, self.size):
             for column in range(1, self.size):
                 liveNeighbors = tempBoard.countLiveNeighbors(row, column)
@@ -62,9 +63,8 @@ class GameBoard: # This class represents the GameBoard itself, and primarily con
             returnStr += str(self.board[i]) + '\n'
         return returnStr
     
-myBoard = GameBoard(10)
+myBoard = GameBoard(3)
 myBoard.initialize()
 print(str(myBoard) + '\n')
-print(str(myBoard.countLiveNeighbors(10, 10)))
-
-
+myBoard.doGameTick()
+print(str(myBoard))
