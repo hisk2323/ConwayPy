@@ -114,18 +114,28 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.colPrompt.destroy()
         self.colEntry.destroy()
         self.submit.destroy()
+        self.output.destroy()
         board = GameBoard(rows, cols)
-        livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(4, 4)
-        deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(4, 4)
+        self.livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(4, 4)
+        self.deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(4, 4)
         photolist = []
+        print(str(board))
         for row in range(rows):
             for col in range(cols):
                 if board.getIndex(row + 1, col + 1) == 'A':
-                    photolist.append(tk.Label(anchor = 'w', image = livingcell))
+                    print('adding live cell')
+                    photolist.append(tk.Label(self.parent, image = self.livingcell))
                 else:
-                    photolist.append(tk.Label(anchor = 'w', image = deadcell))
+                    print('adding dead cell')
+                    photolist.append(tk.Label(self.parent, image = self.deadcell))
                 photolist[-1].grid(row = row, column = col)
-        self.pack(photolist)
+        newGameButton = tk.Button(self.parent, text = "New game", command = self.newGame)
+        newGameButton.grid()
+
+    def newGame(self): # Creates a new game
+        for widget in self.parent.winfo_children():
+            widget.destroy()
+        self.initializeGui()
 
 # End of the Interface class
 
