@@ -13,6 +13,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         self.rows = rows
         self.columns = columns
         self.board = [[0 for i in range(columns)] for i in range(rows)]
+        self.generationCount = 0
         self.initialize()
 
     # This method instantiates the game board with a randomly chosen population of cells
@@ -40,6 +41,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         return liveNeighborCount
 
     def doGameTick(self):
+        self.generationCount += 1
         tempBoard = GameBoard(self.rows, self.columns)
         # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
         tempBoard.board = self.board
@@ -83,9 +85,12 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.parent = parent
+        for i in range(4):
+            self.columnconfigure(i, weight = 1)
         self.initializeGui()
 
     def initializeGui(self):
+
         self.rowPrompt = tk.Label(self.parent, text="Enter a number of rows: ", anchor='w')
         self.rowEntry = tk.Entry(self.parent)
         self.colPrompt = tk.Label(self.parent, text = "Enter a number of columns: ", anchor = 'w')
@@ -95,13 +100,13 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.output = tk.Label(self.parent, text = '')
 
         # Lay the widgets on the screen
-        self.rowPrompt.grid()
-        self.rowEntry.grid()
-        self.colPrompt.grid()
-        self.colEntry.grid()
-        self.output.grid()
-        self.submit.grid()
-        self.exit.grid()
+        self.rowPrompt.grid(row = 0, column = 0)
+        self.rowEntry.grid(row = 1, column = 0)
+        self.colPrompt.grid(row = 2, column = 0)
+        self.colEntry.grid(row = 3, column = 0)
+        self.output.grid(row = 1, column = 1)
+        self.submit.grid(row = 4, column = 0)
+        self.exit.grid(row = 4, column = 4)
 
     def createGame(self):
         try:
@@ -123,14 +128,14 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         for row in range(rows):
             for col in range(cols):
                 if board.getIndex(row + 1, col + 1) == 'A':
-                    print('adding live cell')
                     photolist.append(tk.Label(self.parent, image = self.livingcell))
                 else:
-                    print('adding dead cell')
                     photolist.append(tk.Label(self.parent, image = self.deadcell))
                 photolist[-1].grid(row = row, column = col)
         newGameButton = tk.Button(self.parent, text = "New game", command = self.newGame)
-        newGameButton.grid()
+        newGameButton.grid(column = 4, row = 5)
+        genLabel = tk.Label(self.parent, text = str(board.generationCount) + ' generations', anchor = 'w')
+        genLabel.grid(column = 2, row = 0)
 
     def newGame(self): # Creates a new game
         for widget in self.parent.winfo_children():
@@ -141,5 +146,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.title("Conway's Game of Life")
     Interface(root)
     root.mainloop()
