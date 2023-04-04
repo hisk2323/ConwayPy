@@ -12,7 +12,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
-        self.board = [[0 for i in range(columns)] for i in range(rows)]
+        self.board = [['Z' for i in range(columns)] for i in range(rows)]
         self.generationCount = 0
         self.initialize()
 
@@ -42,6 +42,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
 
     def doGameTick(self):
         self.generationCount += 1
+        print(self.generationCount)
         tempBoard = GameBoard(self.rows, self.columns)
         # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
         tempBoard.board = self.board
@@ -72,6 +73,13 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
     def setIndex(self, row, column, newValue): # Method to update the cell at a specific index
         self.board[row - 1][column - 1] = newValue
 
+    def isGameOver(self): # Method to determine whether the game is over (i.e., if there are any living cells left)
+        count = 0
+        for row in self.board:
+            count += row.count('A')
+        return count == 0
+            
+
     def __repr__(self): # toString method; ensures that the cells are displayed in a grid rather than one line
         returnStr = ''
         for i in range(0, self.rows):
@@ -85,62 +93,93 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.parent = parent
-        for i in range(4):
-            self.columnconfigure(i, weight = 1)
         self.initializeGui()
 
     def initializeGui(self):
-
         self.rowPrompt = tk.Label(self.parent, text="Enter a number of rows: ", anchor='w')
         self.rowEntry = tk.Entry(self.parent)
         self.colPrompt = tk.Label(self.parent, text = "Enter a number of columns: ", anchor = 'w')
         self.colEntry = tk.Entry(self.parent)
         self.submit = tk.Button(self.parent, text = "Submit", command = self.createGame)
         self.exit = tk.Button(self.parent, text = "Quit", command = self.parent.destroy)
-        self.output = tk.Label(self.parent, text = '')
+        self.imgFrame = tk.Frame(self.parent)
 
         # Lay the widgets on the screen
-        self.rowPrompt.grid(row = 0, column = 0)
-        self.rowEntry.grid(row = 1, column = 0)
-        self.colPrompt.grid(row = 2, column = 0)
-        self.colEntry.grid(row = 3, column = 0)
-        self.output.grid(row = 1, column = 1)
-        self.submit.grid(row = 4, column = 0)
-        self.exit.grid(row = 4, column = 4)
+        # self.rowPrompt.grid(row = 0, column = 0)
+        # self.rowEntry.grid(row = 1, column = 0)
+        # self.colPrompt.grid(row = 2, column = 0)
+        # self.colEntry.grid(row = 3, column = 0)
+        # #self.output.grid(row = 1, column = 1)
+        # self.submit.grid(row = 4, column = 0)
+        # self.exit.grid(row = 5, column = 4)
+        self.rowPrompt.grid()
+        self.rowEntry.grid()
+        self.colEntry.grid()
+        self.colPrompt.grid()
+        self.imgFrame.grid()
+        self.submit.grid()
+        #self.exit.grid()
 
     def createGame(self):
         try:
-            rows = int(self.rowEntry.get())
-            cols = int(self.colEntry.get())
+            self.rows = int(self.rowEntry.get())
+            self.cols = int(self.colEntry.get())
         except ValueError:
-            self.output.configure(text = "Please only enter valid digits!")
+            #self.output.configure(text = "Please only enter valid digits!")
+            pass
         self.rowPrompt.destroy()
         self.rowEntry.destroy()
         self.colPrompt.destroy()
         self.colEntry.destroy()
         self.submit.destroy()
-        self.output.destroy()
-        board = GameBoard(rows, cols)
-        self.livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(4, 4)
-        self.deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(4, 4)
-        photolist = []
-        print(str(board))
-        for row in range(rows):
-            for col in range(cols):
-                if board.getIndex(row + 1, col + 1) == 'A':
-                    photolist.append(tk.Label(self.parent, image = self.livingcell))
+        self.board = GameBoard(self.rows, self.cols)
+        self.livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(10, 10)
+        self.deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(10, 10)
+        self.photolist = []
+        print(str(self.board))
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.board.getIndex(row + 1, col + 1) == 'A':
+                    self.photolist.append(tk.Label(self.imgFrame, image = self.livingcell))
                 else:
-                    photolist.append(tk.Label(self.parent, image = self.deadcell))
-                photolist[-1].grid(row = row, column = col)
-        newGameButton = tk.Button(self.parent, text = "New game", command = self.newGame)
-        newGameButton.grid(column = 4, row = 5)
-        genLabel = tk.Label(self.parent, text = str(board.generationCount) + ' generations', anchor = 'w')
-        genLabel.grid(column = 2, row = 0)
+                    self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
+                self.photolist[-1].grid(row = row, column = col)
+        self.newGameButton = tk.Button(self.parent, text = "New game", command = self.newGame)
+        self.nextTickButton = tk.Button(self.parent, text = "Next tick", command = self.gameTick)
+        self.genLabel = tk.Label(self.parent, text = str(self.board.generationCount) + ' generations', anchor = 'w')
+        #self.genLabel.grid(column = 2, row = 4)
+        #self.newGameButton.grid(column = 4, row = 4)
+        self.genLabel.grid()
+        self.nextTickButton.grid()
+        self.newGameButton.grid()
+        self.exit.grid()
 
     def newGame(self): # Creates a new game
         for widget in self.parent.winfo_children():
             widget.destroy()
         self.initializeGui()
+
+    def gameTick(self):
+        if self.board.isGameOver() == False:
+            print('Doing tick')
+            self.board.doGameTick()
+            for photo in self.photolist:
+                photo.grid_remove()
+            self.photolist = []
+            print(str(self.board))
+            for row in range(self.rows):
+                for col in range(self.cols):
+                    if self.board.getIndex(row + 1, col + 1) == 'A':
+                        self.photolist.append(tk.Label(self.imgFrame, image = self.livingcell))
+                    else:
+                        self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
+                    self.photolist[-1].grid(row = row, column = col)
+            self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
+        else: # If the game is over, don't do anything (yet; this will be changed later)
+            self.genLabel.configure(text = (str(self.board.generationCount) + ' generations\nGame is over - all cells are dead!'))
+            self.nextTickButton.destroy()
+            
+
 
 # End of the Interface class
 
