@@ -1,5 +1,5 @@
 # A program to run Conway's Game Of Life, by Owen Hiskey
-# Features graphics
+# Features graphics with tkinter
 
 
 # Import necessary libraries
@@ -13,6 +13,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         self.rows = rows
         self.columns = columns
         self.board = [[0 for i in range(columns)] for i in range(rows)]
+        self.initialize()
 
     # This method instantiates the game board with a randomly chosen population of cells
     def initialize(self):
@@ -63,16 +64,13 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
                 elif currentValue == 'D' and liveNeighbors == 3:
                     self.setIndex(row, column, 'A')
 
-    def getIndex(self, row, column):
+    def getIndex(self, row, column): # Method to retrieve the cell at a specific index
         return self.board[row - 1][column - 1]
 
-    def setIndex(self, row, column, newValue):
+    def setIndex(self, row, column, newValue): # Method to update the cell at a specific index
         self.board[row - 1][column - 1] = newValue
 
-    def getSize(self):
-        return self.size
-
-    def __repr__(self):
+    def __repr__(self): # toString method; ensures that the cells are displayed in a grid rather than one line
         returnStr = ''
         for i in range(0, self.rows):
             returnStr += str(self.board[i]) + '\n'
@@ -97,22 +95,37 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.output = tk.Label(self.parent, text = '')
 
         # Lay the widgets on the screen
-        self.rowPrompt.pack(side = "top", fill = "x")
-        self.rowEntry.pack(side = "top", fill = "x")
-        self.colPrompt.pack(side = "top", fill = "x")
-        self.colEntry.pack(side = "top", fill = "x")
-        self.output.pack(side = "top", fill = "x", expand = True)
-        self.submit.pack(side = "left")
-        self.exit.pack(side = "right")
+        self.rowPrompt.grid()
+        self.rowEntry.grid()
+        self.colPrompt.grid()
+        self.colEntry.grid()
+        self.output.grid()
+        self.submit.grid()
+        self.exit.grid()
 
     def createGame(self):
         try:
             rows = int(self.rowEntry.get())
             cols = int(self.colEntry.get())
-            result = "%s rows, %s columns" % (rows, cols)
         except ValueError:
-            result = "Please only enter valid digits!"
-        self.output.configure(text = result) 
+            self.output.configure(text = "Please only enter valid digits!")
+        self.rowPrompt.destroy()
+        self.rowEntry.destroy()
+        self.colPrompt.destroy()
+        self.colEntry.destroy()
+        self.submit.destroy()
+        board = GameBoard(rows, cols)
+        livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(4, 4)
+        deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(4, 4)
+        photolist = []
+        for row in range(rows):
+            for col in range(cols):
+                if board.getIndex(row + 1, col + 1) == 'A':
+                    photolist.append(tk.Label(anchor = 'w', image = livingcell))
+                else:
+                    photolist.append(tk.Label(anchor = 'w', image = deadcell))
+                photolist[-1].grid(row = row, column = col)
+        self.pack(photolist)
 
 # End of the Interface class
 
