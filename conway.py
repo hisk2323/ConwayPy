@@ -7,8 +7,8 @@ import random
 import tkinter as tk
 import tkinter.messagebox as tkm
 
-
 class GameBoard:  # This class represents the GameBoard itself, and primarily consists of a 2D array
+    
     # This constructor takes two arguments; one for rows and one for columns
     def __init__(self, rows, columns):
         self.rows = rows
@@ -93,7 +93,9 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
+        parent.bind('<Return>', self.createGame)
         self.parent = parent
+        #self.bind("enter", self.createGame)
         self.initializeGui()
 
     def initializeGui(self):
@@ -113,11 +115,14 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.imgFrame.grid()
         self.submit.grid()
 
-    def createGame(self): # Prompts info from the user for rows and columns, uses this to create a new game
+    def createGame(self, event=None): # Prompts info from the user for rows and columns, uses this to create a new game
+        #self.bind_all("enter", self.createGame)
         try:
             self.rows = int(self.rowEntry.get())
             self.cols = int(self.colEntry.get())
         except ValueError:
+            print(self.rowEntry.get())
+            print(self.colEntry.get())
             tkm.showinfo(title = "Value error", message = "Please only enter valid digits!")
             self.newGame()
             return
