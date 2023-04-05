@@ -127,8 +127,8 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.colEntry.destroy()
         self.submit.destroy()
         self.board = GameBoard(self.rows, self.cols)
-        self.livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(8, 8)
-        self.deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(8, 8)
+        self.livingcell = tk.PhotoImage(file = 'assets/livingcell.png').subsample(8, 8)
+        self.deadcell = tk.PhotoImage(file = 'assets/deadcell.png').subsample(8, 8)
         self.photolist = []
         print(str(self.board))
         for row in range(self.rows):
