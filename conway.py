@@ -4,7 +4,6 @@
 
 # Import necessary libraries
 import random
-import time
 import tkinter as tk
 import tkinter.messagebox as tkm
 
@@ -114,7 +113,7 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.imgFrame.grid()
         self.submit.grid()
 
-    def createGame(self):
+    def createGame(self): # Prompts info from the user for rows and columns, uses this to create a new game
         try:
             self.rows = int(self.rowEntry.get())
             self.cols = int(self.colEntry.get())
@@ -147,7 +146,7 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.newGameButton.grid()
         self.exit.grid()
 
-    def newGame(self): # Creates a new game
+    def newGame(self): # Destroys an old game and then calls the function to start over
         for widget in self.parent.winfo_children():
             widget.destroy()
         self.initializeGui()
@@ -168,11 +167,9 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
                         self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
                     self.photolist[-1].grid(row = row, column = col)
             self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
-        else: # If the game is over, don't do anything (yet; this will be changed later)
+        else: # If the game is over, delete the nextTick button and show some extra info to the user
             self.genLabel.configure(text = (str(self.board.generationCount) + ' generations\nGame is over - all cells are dead!'))
             self.nextTickButton.destroy()
-            
-
 
 # End of the Interface class
 
