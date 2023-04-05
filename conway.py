@@ -4,7 +4,9 @@
 
 # Import necessary libraries
 import random
+import time
 import tkinter as tk
+import tkinter.messagebox as tkm
 
 
 class GameBoard:  # This class represents the GameBoard itself, and primarily consists of a 2D array
@@ -96,7 +98,7 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.initializeGui()
 
     def initializeGui(self):
-        self.rowPrompt = tk.Label(self.parent, text="Enter a number of rows: ", anchor='w')
+        self.rowPrompt = tk.Label(self.parent, text="Enter a number of rows: ", anchor = 'w')
         self.rowEntry = tk.Entry(self.parent)
         self.colPrompt = tk.Label(self.parent, text = "Enter a number of columns: ", anchor = 'w')
         self.colEntry = tk.Entry(self.parent)
@@ -105,36 +107,29 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.imgFrame = tk.Frame(self.parent)
 
         # Lay the widgets on the screen
-        # self.rowPrompt.grid(row = 0, column = 0)
-        # self.rowEntry.grid(row = 1, column = 0)
-        # self.colPrompt.grid(row = 2, column = 0)
-        # self.colEntry.grid(row = 3, column = 0)
-        # #self.output.grid(row = 1, column = 1)
-        # self.submit.grid(row = 4, column = 0)
-        # self.exit.grid(row = 5, column = 4)
         self.rowPrompt.grid()
         self.rowEntry.grid()
         self.colEntry.grid()
         self.colPrompt.grid()
         self.imgFrame.grid()
         self.submit.grid()
-        #self.exit.grid()
 
     def createGame(self):
         try:
             self.rows = int(self.rowEntry.get())
             self.cols = int(self.colEntry.get())
         except ValueError:
-            #self.output.configure(text = "Please only enter valid digits!")
-            pass
+            tkm.showinfo(title = "Value error", message = "Please only enter valid digits!")
+            self.newGame()
+            return
         self.rowPrompt.destroy()
         self.rowEntry.destroy()
         self.colPrompt.destroy()
         self.colEntry.destroy()
         self.submit.destroy()
         self.board = GameBoard(self.rows, self.cols)
-        self.livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(10, 10)
-        self.deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(10, 10)
+        self.livingcell = tk.PhotoImage(file = 'livingcell.png').subsample(8, 8)
+        self.deadcell = tk.PhotoImage(file = 'deadcell.png').subsample(8, 8)
         self.photolist = []
         print(str(self.board))
         for row in range(self.rows):
@@ -147,8 +142,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.newGameButton = tk.Button(self.parent, text = "New game", command = self.newGame)
         self.nextTickButton = tk.Button(self.parent, text = "Next tick", command = self.gameTick)
         self.genLabel = tk.Label(self.parent, text = str(self.board.generationCount) + ' generations', anchor = 'w')
-        #self.genLabel.grid(column = 2, row = 4)
-        #self.newGameButton.grid(column = 4, row = 4)
         self.genLabel.grid()
         self.nextTickButton.grid()
         self.newGameButton.grid()
@@ -186,5 +179,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Conway's Game of Life")
+    root.eval('tk::PlaceWindow . center')
     Interface(root)
     root.mainloop()
