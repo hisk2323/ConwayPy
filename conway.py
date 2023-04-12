@@ -4,6 +4,7 @@
 
 # Import necessary libraries
 import random
+import time
 import tkinter as tk
 import tkinter.messagebox as tkm
 
@@ -46,7 +47,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         print(self.generationCount)
         tempBoard = GameBoard(self.rows, self.columns)
         # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
-        tempBoard.board = self.board
+        tempBoard.board = self.board.copy()
         for row in range(1, self.rows + 1):
             for column in range(1, self.columns + 1):
                 liveNeighbors = tempBoard.countLiveNeighbors(row, column)
@@ -95,7 +96,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         tk.Frame.__init__(self, parent)
         parent.bind('<Return>', self.createGame)
         self.parent = parent
-        #self.bind("enter", self.createGame)
         self.initializeGui()
 
     def initializeGui(self):
@@ -105,6 +105,7 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.colEntry = tk.Entry(self.parent)
         self.submit = tk.Button(self.parent, text = "Submit", command = self.createGame)
         self.exit = tk.Button(self.parent, text = "Quit", command = self.parent.destroy)
+        self.autoplay = tk.Button(self.parent, text = "Skip 10 generations", command = self.auto)
         self.imgFrame = tk.Frame(self.parent)
 
         # Lay the widgets on the screen
@@ -114,9 +115,9 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.colPrompt.grid()
         self.imgFrame.grid()
         self.submit.grid()
+        
 
-    def createGame(self, event=None): # Prompts info from the user for rows and columns, uses this to create a new game
-        #self.bind_all("enter", self.createGame)
+    def createGame(self, event = None): # Prompts info from the user for rows and columns, uses this to create a new game
         try:
             self.rows = int(self.rowEntry.get())
             self.cols = int(self.colEntry.get())
@@ -148,8 +149,10 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.genLabel = tk.Label(self.parent, text = str(self.board.generationCount) + ' generations', anchor = 'w')
         self.genLabel.grid()
         self.nextTickButton.grid()
+        self.autoplay.grid()
         self.newGameButton.grid()
         self.exit.grid()
+
 
     def newGame(self): # Destroys an old game and then calls the function to start over
         for widget in self.parent.winfo_children():
@@ -173,8 +176,15 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
                     self.photolist[-1].grid(row = row, column = col)
             self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
         else: # If the game is over, delete the nextTick button and show some extra info to the user
+            print('Game is over')
             self.genLabel.configure(text = (str(self.board.generationCount) + ' generations\nGame is over - all cells are dead!'))
             self.nextTickButton.destroy()
+            self.autoplay.destroy()
+
+    def auto(self):
+        for i in range(0, 10):
+            self.gameTick()
+
 
 # End of the Interface class
 
