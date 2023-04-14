@@ -1,12 +1,10 @@
 # A program to run Conway's Game Of Life, by Owen Hiskey
 # Features graphics with tkinter
 
-
 # Import necessary libraries
 import random
 import tkinter as tk
 import tkinter.messagebox as tkm
-
 from copy import deepcopy
 
 class GameBoard:  # This class represents the GameBoard itself, and primarily consists of a 2D array
@@ -89,7 +87,6 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
             return True
         else:
             return False
-            
 
     def __repr__(self): # toString method; ensures that the cells are displayed in a grid rather than one line
         returnStr = ''
@@ -124,7 +121,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.colPrompt.grid()
         self.imgFrame.grid()
         self.submit.grid()
-        
 
     def createGame(self, event = None): # Prompts info from the user for rows and columns, uses this to create a new game
         try:
@@ -158,7 +154,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.autoplay.grid()
         self.newGameButton.grid()
         self.exit.grid()
-
 
     def newGame(self): # Destroys an old game and then calls the function to start over
         for widget in self.parent.winfo_children():
