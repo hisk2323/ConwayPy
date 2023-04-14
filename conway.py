@@ -45,7 +45,6 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
 
     def doGameTick(self):
         self.generationCount += 1
-        print(self.generationCount)
         tempBoard = GameBoard(self.rows, self.columns)
         # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
         tempBoard.board = deepcopy(self.board)
@@ -132,8 +131,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
             self.rows = int(self.rowEntry.get())
             self.cols = int(self.colEntry.get())
         except ValueError:
-            print(self.rowEntry.get())
-            print(self.colEntry.get())
             tkm.showinfo(title = "Value error", message = "Please only enter valid digits!")
             self.newGame()
             return
@@ -146,7 +143,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.livingcell = tk.PhotoImage(file = 'assets/livingcell.png').subsample(8, 8)
         self.deadcell = tk.PhotoImage(file = 'assets/deadcell.png').subsample(8, 8)
         self.photolist = []
-        print(str(self.board))
         for row in range(self.rows):
             for col in range(self.cols):
                 if self.board.getIndex(row + 1, col + 1) == 'A':
@@ -172,16 +168,15 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
     def gameTick(self):
         gameOver = self.board.allCellsDead()
         stuck = self.board.isUnchanging()
-        if stuck == True:
-            print('Game is over due to the cells being stuck in an unchanging pattern!')
+        if gameOver == True:
+            self.genLabel.configure(text = (str(self.board.generationCount) + ' generations\nGame is over - all cells are dead!'))
+        elif stuck == True:
             self.genLabel.configure(text = (str(self.board.generationCount) + ' generations\nGame is over - cells are stuck!'))
         elif gameOver == False:
-            print('Doing tick')
             self.board.doGameTick()
             for photo in self.photolist:
                 photo.grid_remove() # Remove all of the images used to display the previous generation
             self.photolist = []
-            print(str(self.board))
             for row in range(self.rows):
                 for col in range(self.cols):
                     if self.board.getIndex(row + 1, col + 1) == 'A':
@@ -191,12 +186,8 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
                     self.photolist[-1].grid(row = row, column = col)
             self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
             return
-        elif gameOver == True:
-            print('Game is over due to all cells being dead!')
-            self.genLabel.configure(text = (str(self.board.generationCount) + ' generations\nGame is over - all cells are dead!'))
         self.nextTickButton.destroy()
         self.autoplay.destroy()
-        return
 
     def auto(self):
         for i in range(0, 10):
