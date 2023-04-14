@@ -100,6 +100,8 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         parent.bind('<Return>', self.createGame)
         self.parent = parent
         self.initializeGui()
+        self.livingcell = tk.PhotoImage(file = 'assets/livingcell.png').subsample(8, 8)
+        self.deadcell = tk.PhotoImage(file = 'assets/deadcell.png').subsample(8, 8)
 
     def initializeGui(self):
         self.rowPrompt = tk.Label(self.parent, text="Enter a number of rows: ", anchor = 'w')
@@ -133,8 +135,6 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.colEntry.destroy()
         self.submit.destroy()
         self.board = GameBoard(self.rows, self.cols)
-        self.livingcell = tk.PhotoImage(file = 'assets/livingcell.png').subsample(8, 8)
-        self.deadcell = tk.PhotoImage(file = 'assets/deadcell.png').subsample(8, 8)
         self.photolist = []
         for row in range(self.rows):
             for col in range(self.cols):
