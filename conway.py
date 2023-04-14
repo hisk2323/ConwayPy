@@ -43,9 +43,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
 
     def doGameTick(self):
         self.generationCount += 1
-        tempBoard = GameBoard(self.rows, self.columns)
-        # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
-        tempBoard.board = deepcopy(self.board)
+        tempBoard = deepcopy(self) # Use a copy of self to ensure that later cells aren't affected by changes made to earlier cells
         for row in range(1, self.rows + 1):
             for column in range(1, self.columns + 1):
                 liveNeighbors = tempBoard.countLiveNeighbors(row, column)
@@ -80,8 +78,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         return count == 0
     
     def isUnchanging(self): # Method to determine whether the game is over due to the cells being stuck in an unchanging loop
-        newBoard = GameBoard(self.rows, self.columns)
-        newBoard.board = deepcopy(self.board)
+        newBoard = deepcopy(self)
         newBoard.doGameTick()
         if (newBoard.board == self.board):
             return True
