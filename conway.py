@@ -4,9 +4,10 @@
 
 # Import necessary libraries
 import random
-import time
 import tkinter as tk
 import tkinter.messagebox as tkm
+
+from copy import deepcopy
 
 class GameBoard:  # This class represents the GameBoard itself, and primarily consists of a 2D array
     
@@ -47,7 +48,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         print(self.generationCount)
         tempBoard = GameBoard(self.rows, self.columns)
         # Use a copy of the board to ensure that later cells aren't affected by changes made to earlier cells
-        tempBoard.board = self.board.copy()
+        tempBoard.board = deepcopy(self.board)
         for row in range(1, self.rows + 1):
             for column in range(1, self.columns + 1):
                 liveNeighbors = tempBoard.countLiveNeighbors(row, column)
@@ -76,9 +77,15 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         self.board[row - 1][column - 1] = newValue
 
     def isGameOver(self): # Method to determine whether the game is over (i.e., if there are any living cells left)
+        # Also attempts to test if the game is stuck in an unchanging pattern (i.e., 2x2 squares of living cells will never die or move)
         count = 0
         for row in self.board:
             count += row.count('A')
+        newBoard = GameBoard(self.rows, self.columns)
+        newBoard.board = deepcopy(self.board)
+        newBoard.doGameTick()
+        if (newBoard.board == self.board): # If the board is not changing from tick to tick, the game has ended
+            count = 0
         return count == 0
             
 
