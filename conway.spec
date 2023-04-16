@@ -41,5 +41,11 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['assets\\livingcell.ico'],
+    icon=['assets/livingcell.png'],
+)
+app = BUNDLE(
+    exe,
+    name='conway.app',
+    icon='assets/livingcell.png',
+    bundle_identifier=None,
 )
