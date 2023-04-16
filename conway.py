@@ -3,6 +3,8 @@
 
 # Import necessary libraries
 import random
+import os
+import sys
 import tkinter as tk
 import tkinter.messagebox as tkm
 from copy import deepcopy
@@ -16,6 +18,13 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
         self.board = [['Z' for i in range(columns)] for i in range(rows)]
         self.generationCount = 0
         self.initialize()
+
+    @staticmethod
+    def getPath(filename): # Deal with PyInstaller's weirdness
+        if hasattr(sys, "_MEIPASS"):
+            return os.path.join(sys._MEIPASS, filename)
+        else:
+            return os.path.join('assets', filename)
 
     # This method instantiates the game board with a randomly chosen population of cells
     def initialize(self):
@@ -100,8 +109,8 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         parent.bind('<Return>', self.createGame)
         self.parent = parent
         self.initializeGui()
-        self.livingcell = tk.PhotoImage(file = 'assets/livingcell.png').subsample(8, 8)
-        self.deadcell = tk.PhotoImage(file = 'assets/deadcell.png').subsample(8, 8)
+        self.livingcell = tk.PhotoImage(file = GameBoard.getPath('livingcell.png')).subsample(8, 8)
+        self.deadcell = tk.PhotoImage(file = GameBoard.getPath('deadcell.png')).subsample(8, 8)
 
     def initializeGui(self):
         self.rowPrompt = tk.Label(self.parent, text="Enter a number of rows: ", anchor = 'w')
