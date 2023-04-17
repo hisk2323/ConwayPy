@@ -112,7 +112,7 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.livingcell = tk.PhotoImage(file = GameBoard.getPath('livingcell.png')).subsample(8, 8)
         self.deadcell = tk.PhotoImage(file = GameBoard.getPath('deadcell.png')).subsample(8, 8)
 
-    def initializeGui(self):
+    def initializeGui(self): # Initializes the GUI, text entry boxes to obtain rows and columns
         self.rowPrompt = tk.Label(self.parent, text="Enter a number of rows: ", anchor = 'w')
         self.rowEntry = tk.Entry(self.parent)
         self.colPrompt = tk.Label(self.parent, text = "Enter a number of columns: ", anchor = 'w')
@@ -121,6 +121,11 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.exit = tk.Button(self.parent, text = "Quit", command = self.parent.destroy)
         self.autoplay = tk.Button(self.parent, text = "Skip 10 generations", command = self.auto)
         self.imgFrame = tk.Frame(self.parent)
+
+        self.rowEntry.insert(0, '10') # Insert default value of 10
+        self.rowEntry.bind("<FocusIn>", lambda args: self.rowEntry.delete('0', 'end')) # Delete the value when the user focuses on the textbox
+        self.colEntry.insert(0, '10')
+        self.colEntry.bind("<FocusIn>", lambda args: self.colEntry.delete('0', 'end'))
 
         # Lay the widgets on the screen
         self.rowPrompt.grid()
@@ -166,7 +171,7 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
             widget.destroy()
         self.initializeGui()
 
-    def gameTick(self):
+    def gameTick(self): # Iterates the game by one generation
         gameOver = self.board.allCellsDead()
         stuck = self.board.isUnchanging()
         if gameOver == True:
@@ -185,8 +190,7 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
                     else:
                         self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
                     self.photolist[-1].grid(row = row, column = col)
-            #self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
-            if self.board.generationCount == 1:
+            if self.board.generationCount == 1: # Account for proper grammar
                 self.genLabel.configure(text = (str(self.board.generationCount) + ' generation'))
             else:
                 self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
@@ -194,10 +198,9 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         self.nextTickButton.destroy()
         self.autoplay.destroy()
 
-    def auto(self):
+    def auto(self): # Iterates the game by 10 generations
         for i in range(0, 10):
             self.gameTick()
-
 
 # End of the Interface class
 
