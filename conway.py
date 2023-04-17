@@ -125,8 +125,8 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
         # Lay the widgets on the screen
         self.rowPrompt.grid()
         self.rowEntry.grid()
-        self.colEntry.grid()
         self.colPrompt.grid()
+        self.colEntry.grid()
         self.imgFrame.grid()
         self.submit.grid()
 
@@ -153,8 +153,8 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
                     self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
                 self.photolist[-1].grid(row = row, column = col)
         self.newGameButton = tk.Button(self.parent, text = "New game", command = self.newGame)
-        self.nextTickButton = tk.Button(self.parent, text = "Next tick", command = self.gameTick)
-        self.genLabel = tk.Label(self.parent, text = str(self.board.generationCount) + ' generations', anchor = 'w')
+        self.nextTickButton = tk.Button(self.parent, text = "Next generation", command = self.gameTick)
+        self.genLabel = tk.Label(self.parent, text = str(self.board.generationCount) + ' generations', anchor = 'center')
         self.genLabel.grid()
         self.nextTickButton.grid()
         self.autoplay.grid()
@@ -185,7 +185,11 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
                     else:
                         self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
                     self.photolist[-1].grid(row = row, column = col)
-            self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
+            #self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
+            if self.board.generationCount == 1:
+                self.genLabel.configure(text = (str(self.board.generationCount) + ' generation'))
+            else:
+                self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
             return
         self.nextTickButton.destroy()
         self.autoplay.destroy()

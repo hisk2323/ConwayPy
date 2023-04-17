@@ -8,7 +8,7 @@ a = Analysis(
     ['conway.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets/*', '.')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
