@@ -2,7 +2,6 @@
 # Features graphics with tkinter
 
 # Import necessary libraries
-#import random
 import sys
 import tkinter as tk
 import tkinter.messagebox as tkm
@@ -22,10 +21,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
 
     @staticmethod
     def getPath(filename): # Deal with PyInstaller's weirdness
-        if hasattr(sys, "_MEIPASS"):
-            return path.join(sys._MEIPASS, filename)
-        else:
-            return path.join('assets', filename)
+        return path.join(sys._MEIPASS, filename) if hasattr(sys, "_MEIPASS") else path.join('assets', filename)
 
     # This method instantiates the game board with a randomly chosen population of cells
     def initialize(self):
@@ -35,8 +31,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
 
     def countLiveNeighbors(self, row, column):
         rowIndex = row - 1
-        # Subtract one from each so that they can be used as array indices
-        columnIndex = column - 1
+        columnIndex = column - 1 # Subtract one from each so that they can be used as array indices
         liveNeighborCount = 0
 
         for i in range(rowIndex - 1, rowIndex + 2):
@@ -87,10 +82,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
     def isUnchanging(self): # Method to determine whether the game is over due to the cells being stuck in an unchanging loop
         newBoard = deepcopy(self)
         newBoard.doGameTick()
-        if (newBoard.board == self.board):
-            return True
-        else:
-            return False
+        return True if newBoard.board == self.board else False
 
     def __repr__(self): # toString method; ensures that the cells are displayed in a grid rather than one line
         returnStr = ''
@@ -98,7 +90,6 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
             returnStr += str(self.board[i]) + '\n'
         return returnStr
 # End of GameBoard class
-
 
 class Interface(tk.Frame):  # A class for the GUI component of the game
 
