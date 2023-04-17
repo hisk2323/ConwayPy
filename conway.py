@@ -2,12 +2,13 @@
 # Features graphics with tkinter
 
 # Import necessary libraries
-import random
+#import random
 import sys
 import tkinter as tk
 import tkinter.messagebox as tkm
 from copy import deepcopy
 from os import path
+from random import random
 
 class GameBoard:  # This class represents the GameBoard itself, and primarily consists of a 2D array
     
@@ -30,10 +31,7 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
     def initialize(self):
         for row in range(0, self.rows):
             for column in range(0, self.columns):
-                if random.randint(0, 1) == 1:
-                    self.board[row][column] = 'D'
-                else:
-                    self.board[row][column] = 'A'
+                self.board[row][column] = 'D' if random() < 0.5 else 'A'
 
     def countLiveNeighbors(self, row, column):
         rowIndex = row - 1
