@@ -3,11 +3,11 @@
 
 # Import necessary libraries
 import random
-import os
 import sys
 import tkinter as tk
 import tkinter.messagebox as tkm
 from copy import deepcopy
+from os import path
 
 class GameBoard:  # This class represents the GameBoard itself, and primarily consists of a 2D array
     
@@ -22,9 +22,9 @@ class GameBoard:  # This class represents the GameBoard itself, and primarily co
     @staticmethod
     def getPath(filename): # Deal with PyInstaller's weirdness
         if hasattr(sys, "_MEIPASS"):
-            return os.path.join(sys._MEIPASS, filename)
+            return path.join(sys._MEIPASS, filename)
         else:
-            return os.path.join('assets', filename)
+            return path.join('assets', filename)
 
     # This method instantiates the game board with a randomly chosen population of cells
     def initialize(self):
