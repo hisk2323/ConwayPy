@@ -174,15 +174,9 @@ class Interface(tk.Frame):  # A class for the GUI component of the game
             self.photolist = []
             for row in range(self.rows):
                 for col in range(self.cols):
-                    if self.board.getIndex(row + 1, col + 1) == 'A':
-                        self.photolist.append(tk.Label(self.imgFrame, image = self.livingcell))
-                    else:
-                        self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
+                    self.photolist.append(tk.Label(self.imgFrame, image = self.livingcell)) if self.board.getIndex(row + 1, col + 1) == 'A' else self.photolist.append(tk.Label(self.imgFrame, image = self.deadcell))
                     self.photolist[-1].grid(row = row, column = col)
-            if self.board.generationCount == 1: # Account for proper grammar
-                self.genLabel.configure(text = (str(self.board.generationCount) + ' generation'))
-            else:
-                self.genLabel.configure(text = (str(self.board.generationCount) + ' generations'))
+            self.genLabel.configure(text = (str(self.board.generationCount) + ' generation') if self.board.generationCount == 1 else (str(self.board.generationCount) + ' generations'))
             return
         self.nextTickButton.destroy()
         self.autoplay.destroy()
