@@ -98,7 +98,7 @@ You will need [Python](https://www.python.org/) installed before you can this ap
 <!-- USAGE EXAMPLES -->
 ## Screenshots
 
-![Screenshot](assets/screenshot1.png)
+![Screenshot](assets/Screenshot1.png)
 ![Living cell](assets/livingcell.png)
 ![Dead cell](assets/deadcell.png)
 
