@@ -57,6 +57,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 A simple Python-based app for running Conway's Game of Life, with a cool graphical interface!
+Initially created for a class assignment, I found this project quite fun to work on and plan to continue maintaining it!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
